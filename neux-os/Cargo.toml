@@ -1,0 +1,19 @@
+[package]
+name = "neux-os"
+version = "0.1.0"
+edition = "2021"
+description = "NEUX OS - AI-Augmented Operating System"
+
+[[bin]]
+name = "neux-os"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = "s"
+lto = true
+
+[target.'cfg(target_arch = "x86_64")'.dependencies]
+x86_64 = "2.7"
+
+[lib]
+crate-type = ["staticlib"]
