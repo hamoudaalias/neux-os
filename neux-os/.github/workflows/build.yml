@@ -1,0 +1,30 @@
+name: Build NEUX OS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install NASM
+        run: sudo apt-get install -y nasm
+        
+      - name: Build Bootloader
+        run: nasm -f bin boot.asm -o boot.bin
+        
+      - name: Create OS Image
+        run: |
+          cp boot.bin os.img
+          truncate -s 1M os.img
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: neux-os-img
+          path: os.img
