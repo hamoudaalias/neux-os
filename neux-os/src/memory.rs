@@ -1,31 +1,34 @@
-//! Memory Management
+//! Memory Management - Simple paging and heap
 
 pub const KERNEL_START: usize = 0x0010_0000;
-pub const KERNEL_END: usize = 0x0010_0000 + 0x0010_0000; // 1MB kernel space
+pub const KERNEL_END: usize = 0x0040_0000; // 3MB kernel space
+pub const PHYSICAL_START: usize = 0x0000_0000;
+pub const PHYSICAL_END: usize = 0x0010_0000; // First 1MB mapped
 
-pub struct PageDirectory {
-    entries: [u32; 1024],
-}
-
-impl PageDirectory {
-    pub fn new() -> Self {
-        Self { entries: [0; 1024] }
-    }
-
-    pub fn map(&mut self, virtual_addr: usize, physical_addr: usize, flags: u32) {
-        let pde_index = virtual_addr >> 22;
-        let pte_index = (virtual_addr >> 12) & 0x3FF;
-        
-        let entry = (physical_addr & 0xFFFFF000) | flags | 1; // Present
-        self.entries[pde_index] = entry;
-    }
+pub struct PageFrame {
+    address: usize,
+    flags: u32,
 }
 
 pub fn init() {
-    // Physical memory manager would go here
-    // For now, just Identity map the low 1MB
+    // Identity map first 1MB (required for real mode)
+    // Setup simple heap after kernel
 }
 
-pub fn alloc_page() -> Option<usize> {
-    None // Would allocate from physical memory pool
+pub fn alloc_frame() -> Option<usize> {
+    // Would allocate from free frames
+    None
+}
+
+pub fn free_frame(addr: usize) {
+    // Would free a frame
+}
+
+pub fn virtual_to_physical(virt: usize) -> Option<usize> {
+    // Simple case: identity mapped
+    if virt < 0x0010_0000 {
+        Some(virt)
+    } else {
+        None // Not mapped
+    }
 }
