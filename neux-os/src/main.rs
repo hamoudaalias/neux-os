@@ -1,9 +1,10 @@
 //! NEUX OS v0.2 - Kernel with exception handlers
 //!
-//! Build: cargo build
-//! Run: qemu-system-x86_64 -drive format=raw,file=kernel.bin
+//! Build: cargo build --release --target x86_64-unknown-none
+//! Run: qemu-system-x86_64 -drive format=raw,file=neux.img
 
 #![no_std]
+#![no_main]
 #![feature(panic_info_message)]
 
 mod vga;
@@ -13,13 +14,12 @@ mod memory;
 
 use core::panic::PanicInfo;
 
-const VERSION: &[u8] = b"NEUX OS v0.2 - AI-Augmented OS\0";
-
 #[no_mangle]
-pub extern "C" fn _start() -> ! {
+#[start]
+pub fn _start() -> ! {
     // 1. Init VGA
     vga::init();
-    vga::writeln(VERSION);
+    vga::writeln(b"NEUX OS v0.2 - AI-Augmented OS");
     vga::writeln(b"Initializing...");
     
     // 2. Init GDT (memory segments)
@@ -38,13 +38,13 @@ pub extern "C" fn _start() -> ! {
     vga::writeln(b"OK");
     
     vga::writeln(b"");
+    vga::writeln(b"===========================");
     vga::writeln(b"NEUX OS Ready!");
-    vga::writeln(b"Type 'help' for commands");
+    vga::writeln(b"===========================");
     
     // Enable interrupts
     unsafe { core::arch::asm!("sti") };
     
-    // Halt with interrupts enabled
     loop {
         unsafe { core::arch::asm!("hlt") };
     }
@@ -52,7 +52,7 @@ pub extern "C" fn _start() -> ! {
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    let panic_msg = b"PANIC: \0";
+    let panic_msg = b"PANIC: ";
     vga::set_color(0x0C, 0x00); // Red on black
     vga::writeln(panic_msg);
     

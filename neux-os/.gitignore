@@ -1,0 +1,14 @@
+# Build output
+target/
+*.img
+*.bin
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Local
+*.local

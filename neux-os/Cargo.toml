@@ -1,8 +1,10 @@
 [package]
 name = "neux-os"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "NEUX OS - AI-Augmented Operating System"
+description = "NEUX OS - AI-Augmented Operating System from scratch"
+authors = ["Hamouda ALIAS"]
+license = "MIT"
 
 [[bin]]
 name = "neux-os"
@@ -17,3 +19,4 @@ x86_64 = "2.7"
 
 [lib]
 crate-type = ["staticlib"]
+name = "neux_os"
