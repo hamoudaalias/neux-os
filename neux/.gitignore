@@ -1,0 +1,14 @@
+# Build output
+target/
+Cargo.lock
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Local
+.neux/
+*.local
